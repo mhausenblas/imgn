@@ -1,10 +1,14 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"mime/multipart"
 	"net/http"
+	"path/filepath"
+	"strings"
 )
 
 // UploadFile uploads a file to the server
@@ -32,6 +36,24 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ListFiles creates a HTML snippet for all uploaded files
+func ListFiles(w http.ResponseWriter, r *http.Request) {
+	files, err := ioutil.ReadDir("./ui/gallery")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Printf("Can't list keys due to %v", err)
+		jsonResponse(w, http.StatusInternalServerError, "Meh, data corruption :(")
+		return
+	}
+	flist := []string{}
+	for _, f := range files {
+		if !strings.HasPrefix(f.Name(), ".") {
+			flist = append(flist, filepath.Join("gallery/", f.Name()))
+		}
+	}
+	_ = json.NewEncoder(w).Encode(flist)
+}
+
 func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader) {
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -39,7 +61,7 @@ func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.File
 		return
 	}
 
-	err = ioutil.WriteFile("../ui/gallery/"+handle.Filename, data, 0666)
+	err = ioutil.WriteFile("./ui/gallery/"+handle.Filename, data, 0666)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
 		return

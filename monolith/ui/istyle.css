@@ -17,9 +17,15 @@ body {
     padding: 10px;
 }
 
-.gallery{
+.gallery {
     margin: 20px;
     background: #fdfdfd;
     width: auto;
     height: auto;
+}
+
+.gimg {
+    width: 100px;
+    margin: 10px;
+    
 }

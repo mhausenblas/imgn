@@ -3,8 +3,7 @@
     var inputFile = d.querySelector("#inputFile");
     var divNotification = d.querySelector("#alert");
 
-    inputFile.addEventListener("change", addFile);
-
+    inputFile.addEventListener("change", addFile);    
     function addFile(e) {
         var file = e.target.files[0]
         if (!file) {
