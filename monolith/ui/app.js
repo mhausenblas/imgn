@@ -27,6 +27,7 @@
         divNotification.classList.add(className);
         setTimeout(function () {
             divNotification.classList.remove(className);
+            location.href = "/";
         }, 3000);
     }
 })(document, axios)

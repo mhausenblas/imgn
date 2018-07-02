@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -7,21 +7,16 @@
     user-scalable=no, initial-scale=1.0, maximum-scale=1.0,
 minimum-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <title>File upload using Ajax</title>
+    <link rel="stylesheet" href="istyle.css">
+    <title>imgn</title>
 </head>
 
 <body>
-    <form action="/upload" method="post" enctype="multipart/form-data" class="uploadForm">
-        <input class="uploadForm__input" type="file" name="file" id="inputFile" accept="image/*">
-        <label class="uploadForm__label" for="inputFile">
-            <i class="fa fa-upload uploadForm__icon"></i> Select a file
-        </label>
-    </form>
-    <div class="notification" id="alert"></div>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="api.js"></script>
-    <script src="app.js"></script>
+    <div class="header">
+        <h1>imgn!</h1>
+    </div>
+    <div class="uploadbtn"><a href="upload.html">Upload</a></div>
+    <div class="gallery" id="gallery"></div>
 </body>
 
 </html>

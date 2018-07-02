@@ -73,6 +73,25 @@ body,
     background: #F2DEDE;
     color: #B24842;
 }
+.header {
+        width: 600px;
+        max-width: 600px;
+        height: 300px;
+    text-align: center;
+    flex-direction: column;
+        align-items: center;
+        justify-content: center;
+}
+
+.uploadbtn {
+        width: 600px;
+        max-width: 600px;
+        height: 300px;
+    text-align: center;
+    flex-direction: column;
+        align-items: center;
+        justify-content: center;
+}
 
 @keyframes alert {
     0% {
