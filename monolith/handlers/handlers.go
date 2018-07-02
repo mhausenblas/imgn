@@ -28,7 +28,7 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
 	case "image/png":
 		saveFile(w, file, handle)
 	default:
-		jsonResponse(w, http.StatusBadRequest, "The format file is not valid.")
+		jsonResponse(w, http.StatusBadRequest, "Sorry, I only support JPEG and PNG files.")
 	}
 }
 
@@ -39,12 +39,12 @@ func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.File
 		return
 	}
 
-	err = ioutil.WriteFile("./files/"+handle.Filename, data, 0666)
+	err = ioutil.WriteFile("../ui/gallery/"+handle.Filename, data, 0666)
 	if err != nil {
 		fmt.Fprintf(w, "%v", err)
 		return
 	}
-	jsonResponse(w, http.StatusCreated, "File uploaded successfully!.")
+	jsonResponse(w, http.StatusCreated, "File uploaded successfully! :)")
 }
 
 func jsonResponse(w http.ResponseWriter, code int, message string) {
