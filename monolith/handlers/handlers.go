@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -41,17 +41,37 @@ func ListFiles(w http.ResponseWriter, r *http.Request) {
 	files, err := ioutil.ReadDir("./ui/gallery")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		log.Printf("Can't list keys due to %v", err)
 		jsonResponse(w, http.StatusInternalServerError, "Meh, data corruption :(")
 		return
 	}
-	flist := []string{}
+	type Entry struct {
+		Source string `json:"src"`
+		Meta   string `json:"meta"`
+	}
+	flist := []Entry{}
 	for _, f := range files {
-		if !strings.HasPrefix(f.Name(), ".") {
-			flist = append(flist, filepath.Join("gallery/", f.Name()))
+		if strings.HasSuffix(f.Name(), "jpg") ||
+			strings.HasSuffix(f.Name(), "jpeg") ||
+			strings.HasSuffix(f.Name(), "png") {
+			flist = append(flist, Entry{
+				Source: filepath.Join("gallery/", f.Name()),
+				Meta:   getMeta(filepath.Join("./ui/gallery/", f.Name())),
+			})
 		}
 	}
 	_ = json.NewEncoder(w).Encode(flist)
+}
+
+func getMeta(imgfile string) string {
+	imgmetafile := imgfile + ".meta"
+	if _, err := os.Stat(imgmetafile); err != nil {
+		return "no metadata available yet"
+	}
+	metadata, err := ioutil.ReadFile(imgmetafile)
+	if err != nil {
+		return "no metadata available yet"
+	}
+	return string(metadata)
 }
 
 func saveFile(w http.ResponseWriter, file multipart.File, handle *multipart.FileHeader) {
