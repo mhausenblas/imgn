@@ -13,3 +13,5 @@
 .DS_Store
 
 gallery/
+/containers/imgproc/imgproc
+/containers/frontend/frontend
