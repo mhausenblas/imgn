@@ -1,5 +1,5 @@
 frontend_version := 0.1
-imgproc_version := 0.1
+imgproc_version := 0.2
 
 .PHONY: build build-frontend build-imgproc clean
 

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: imgproc
-        image: quay.io/mhausenblas/imgn-imgproc:0.1
+        image: quay.io/mhausenblas/imgn-imgproc:0.2
 ---
 apiVersion: apps/v1
 kind: Deployment

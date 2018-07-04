@@ -5,28 +5,34 @@ import (
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
-	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
-	"strings"
 	"time"
+
+	"github.com/mhausenblas/imgn/containers/s3"
 )
 
 func main() {
 	for {
-		files, err := ioutil.ReadDir("/app/gallery")
+		files, err := s3.ListBucket("gallery", "")
 		if err != nil {
-			log.Printf("Can't list gallery: %v", err)
-			return
+			log.Printf("Can't list objects in bucket: %v", err)
 		}
-		for _, f := range files {
-			if strings.HasSuffix(f.Name(), "jpg") ||
-				strings.HasSuffix(f.Name(), "jpeg") ||
-				strings.HasSuffix(f.Name(), "png") {
-				extractMetadata(filepath.Join("/app/gallery", f.Name()))
-			}
+		for _, o := range files {
+			fmt.Println(o)
 		}
+		// files, err := ioutil.ReadDir("/app/gallery")
+		// if err != nil {
+		// 	log.Printf("Can't list gallery: %v", err)
+		// 	return
+		// }
+		// for _, f := range files {
+		// 	if strings.HasSuffix(f.Name(), "jpg") ||
+		// 		strings.HasSuffix(f.Name(), "jpeg") ||
+		// 		strings.HasSuffix(f.Name(), "png") {
+		// 		extractMetadata(filepath.Join("/app/gallery", f.Name()))
+		// 	}
+		// }
 		time.Sleep(10 * time.Second)
 	}
 }

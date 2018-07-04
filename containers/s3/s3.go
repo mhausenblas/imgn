@@ -12,7 +12,7 @@ func newClient() (*minio.Client, error) {
 	endpoint := "minio:9000"
 	accessKeyID := "minio"
 	secretAccessKey := "supersecret"
-	useSSL := true
+	useSSL := false
 	mc, err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 	if err != nil {
 		return &minio.Client{}, err
