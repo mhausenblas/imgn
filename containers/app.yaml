@@ -4,27 +4,18 @@ kind: Deployment
 metadata:
   name: imgproc
 spec:
-  replicas: 1 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imgproc
   template:
     metadata:
       labels:
         app: imgproc
-  spec:
+    spec:
       containers:
       - name: imgproc
         image: quay.io/mhausenblas/imgn-imgproc:0.1
-      volumeMounts:
-        - name: gallery
-          mountPath: /app/gallery
-  volumeClaimTemplates:
-  - metadata:
-      name: gallery
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: "ebs"
-      resources:
-        requests:
-          storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,28 +23,19 @@ metadata:
   name: frontend
 spec:
   replicas: 1 
+  selector:
+    matchLabels:
+      app: frontend
   template:
     metadata:
       labels:
         app: frontend
-  spec:
+    spec:
       containers:
       - name: frontend
         image: quay.io/mhausenblas/imgn-frontend:0.1
         ports:
         - containerPort: 8080
-      volumeMounts:
-        - name: gallery
-          mountPath: /app/ui/gallery
-  volumeClaimTemplates:
-  - metadata:
-      name: gallery
-    spec:
-      accessModes: [ "ReadWriteMany" ]
-      storageClassName: "ebs"
-      resources:
-        requests:
-          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
