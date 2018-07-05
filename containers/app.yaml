@@ -39,9 +39,15 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: quay.io/mhausenblas/imgn-frontend:0.1
+        image: quay.io/mhausenblas/imgn-frontend:0.2
         ports:
         - containerPort: 8080
+        volumeMounts:
+        - name: gallery
+          mountPath: /app/ui/gallery
+      volumes:
+      - name: gallery
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

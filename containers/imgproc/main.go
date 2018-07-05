@@ -42,7 +42,7 @@ func main() {
 	}
 }
 
-// listRemoteFiles lists files in bucket
+// syncBucket syncs the local gallery with the bucket
 func syncBucket(name string) {
 	objects, err := s3.ListBucket(name, "")
 	if err != nil {
