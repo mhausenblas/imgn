@@ -15,9 +15,10 @@ import (
 	"github.com/mhausenblas/imgn/containers/s3"
 )
 
+var galleryPath = "/app/gallery"
+
 func main() {
 	bucketName := "gallery"
-	galleryPath := "/app/gallery"
 	if _, err := os.Stat(galleryPath); os.IsNotExist(err) {
 		derr := os.Mkdir(galleryPath, os.ModePerm)
 		if derr != nil {
