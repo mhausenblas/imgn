@@ -63,13 +63,26 @@ func ListBucket(name, filter string) ([]string, error) {
 	return objects, err
 }
 
-// UploadToBucket stores object in bucket.
-func UploadToBucket(name, object, contentType string) error {
+// UploadToBucket stores file in path under object in bucket.
+func UploadToBucket(name, object, path, contentType string) error {
 	mc, err := newClient()
 	if err != nil {
 		return err
 	}
-	_, err = mc.FPutObject(name, object, object, minio.PutObjectOptions{ContentType: contentType})
+	_, err = mc.FPutObject(name, object, path, minio.PutObjectOptions{ContentType: contentType})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// DownloadFromBucket retrieves object from bucket and stores it in path.
+func DownloadFromBucket(name, object, path string) error {
+	mc, err := newClient()
+	if err != nil {
+		return err
+	}
+	err = mc.FGetObject(name, object, path, minio.GetObjectOptions{})
 	if err != nil {
 		return err
 	}

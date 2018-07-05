@@ -16,6 +16,12 @@ spec:
       containers:
       - name: imgproc
         image: quay.io/mhausenblas/imgn-imgproc:0.2
+        volumeMounts:
+        - name: gallery
+          mountPath: /app/gallery
+      volumes:
+      - name: gallery
+        emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
