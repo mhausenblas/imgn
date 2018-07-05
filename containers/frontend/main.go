@@ -26,6 +26,10 @@ func main() {
 
 // syncBucket syncs the local gallery with the bucket
 func syncBucket(name string) {
+	err := s3.CreateBucket(name)
+	if err != nil {
+		log.Printf("Can't create bucket: %v", err)
+	}
 	for {
 		objects, err := s3.ListBucket(name, "")
 		if err != nil {

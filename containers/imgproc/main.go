@@ -15,17 +15,21 @@ import (
 	"github.com/mhausenblas/imgn/containers/s3"
 )
 
-var galleryPath = "/app/gallery"
-
 func main() {
+	bucketName := "gallery"
+	galleryPath := "/app/gallery"
 	if _, err := os.Stat(galleryPath); os.IsNotExist(err) {
 		derr := os.Mkdir(galleryPath, os.ModePerm)
 		if derr != nil {
 			log.Printf("Can't create local gallery: %v", err)
 		}
 	}
+	err := s3.CreateBucket(bucketName)
+	if err != nil {
+		log.Printf("Can't create bucket: %v", err)
+	}
 	for {
-		syncBucket("gallery")
+		syncBucket(bucketName)
 		files, err := ioutil.ReadDir(galleryPath)
 		if err != nil {
 			log.Printf("Can't read local gallery: %v", err)

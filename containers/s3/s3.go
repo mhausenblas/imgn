@@ -20,14 +20,23 @@ func newClient() (*minio.Client, error) {
 	return mc, nil
 }
 
-// CreateBucket creates a bucket.
+// CreateBucket creates a bucket if it doesn't exist yet.
 func CreateBucket(name string) error {
 	mc, err := newClient()
 	if err != nil {
 		return err
 	}
-	err = mc.MakeBucket(name, "us-east-1")
-	return err
+	exists, err := mc.BucketExists(name)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		err = mc.MakeBucket(name, "us-east-1")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // ListBucket lists the objects in the bucket.
