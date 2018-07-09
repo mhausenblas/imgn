@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.header {
+    text-align: center;
+    width: 100%;
+    margin: 20px;
+}
+
+.uploadbtn {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+}
+
+.gallery {
+    margin: 20px;
+    background: #fdfdfd;
+    width: auto;
+    height: auto;
+}
+
+.gimg {
+    width: 100px;
+    margin: 10px;
+    
+}
