@@ -24,10 +24,10 @@ $ zip -j ./uploadimg.zip uploadimg
 Define role and permissions:
 
 ```bash
-$ aws iam create-role --role-name imgn-lambda-uploadfunc \
---assume-role-policy-document file://uploadfunc/lambda-policy.json
+$ aws iam create-role --role-name imgn-lambda \
+--assume-role-policy-document file://lambda-policy.json
 
-$ aws iam attach-role-policy --role-name imgn-lambda-uploadfunc \
+$ aws iam attach-role-policy --role-name imgn-lambda \
 --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
 
@@ -38,7 +38,7 @@ $ aws lambda create-function \
  --function-name UploadImg \
  --zip-file fileb://uploadimg.zip \
  --runtime go1.x \
- --role arn:aws:iam::$AWS_ACCOUNT_ID:role/imgn-lambda-uploadfunc \
+ --role arn:aws:iam::$AWS_ACCOUNT_ID:role/imgn-lambda \
  --handler uploadimg \
  --region eu-west-1
  ```
