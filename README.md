@@ -6,6 +6,6 @@ Welcome to `imgn!` (as in: imagine), an educational app that demonstrates the jo
 
 It allows you to upload images, viewing them in a gallery. Also, it automatically extracts metadata from the uploaded images. The app is written in Go, using three different ways:
 
-- As a [monolith](monolith/), using TerraForm to deploy into a VM
-- As a [containerized microservice](containers/), using Kubernetes
-- As a collection of functions, using AWS Lambda
+- As a [monolith](monolith/)
+- As a [containerized microservice](containers/) using Kubernetes
+- As a collection of [functions](functions/) using AWS Lambda
