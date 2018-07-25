@@ -1,26 +1,34 @@
 # imgn serverless
 
-Clone repo and `cd functions`:
+Clone this repo and work in the `functions/` subdirectory.
 
-Deploy the UI as a static HTML site (replace `imgn-static` with your own bucket):
+## Preparation
+
+Create S3 buckets, one for the UI (`imgn-static`) and one for storing the uploaded images (`imgn-gallery`):
 
 ```bash
 $ aws s3api create-bucket --bucket imgn-static --region eu-west-1 --create-bucket-configuration LocationConstraint=eu-west-1
-$ aws s3 sync ui/ s3://imgn-static --exclude ".DS_Store" --region eu-west-1
 $ aws s3api put-bucket-policy --bucket imgn-static --policy file://s3-ui-bucket-policy.json --region eu-west-1
 $ aws s3 website s3://imgn-static/ --index-document index.html
+
+$ aws s3api create-bucket --bucket imgn-gallery --region eu-west-1 --create-bucket-configuration LocationConstraint=eu-west-1
+```
+
+## UI
+
+Deploy and update the UI as a static HTML site:
+
+```bash
+$ aws s3 sync ui/ s3://imgn-static --exclude ".DS_Store" --region eu-west-1
 ```
 
 Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.com/
 
-Lambda functions:
+## Lambda functions
 
-Build:
+How to build and deploy the Lambda functions and set up triggers via API Gateway.
 
-```bash
-$ env GOOS=linux GOARCH=amd64 go build -o uploadimg ./uploadfunc
-$ zip -j ./uploadimg.zip uploadimg
-```
+### Preparation
 
 Define role and permissions:
 
@@ -32,7 +40,16 @@ $ aws iam attach-role-policy --role-name imgn-lambda \
 --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 ```
 
-Make sure that you do `export AWS_ACCOUNT_ID=...` (get our ID from the [console](https://console.aws.amazon.com/billing/home?#/account)):
+### Build and deploy
+
+Build a function:
+
+```bash
+$ env GOOS=linux GOARCH=amd64 go build -o uploadimg ./uploadfunc
+$ zip -j ./uploadimg.zip uploadimg
+```
+
+Create the function and make sure that you do `export AWS_ACCOUNT_ID=...` (get our ID from the [console](https://console.aws.amazon.com/billing/home?#/account)):
 
 ```bash
 $ aws lambda create-function \
@@ -44,13 +61,13 @@ $ aws lambda create-function \
  --region eu-west-1
  ```
 
-Invoke:
+Directly invoke like so:
 
 ```bash
 $ aws lambda invoke --function-name UploadImg --region eu-west-1 uploadimg.json
 ```
 
-HTTP API via API Gateway:
+Set up triggers via a HTTP API in the API Gateway:
 
 ```bash
 $ aws apigateway create-rest-api --name imgn --region eu-west-1
@@ -108,8 +125,7 @@ $ aws lambda add-permission \
  --region eu-west-1
 ```
 
-
-Build and update:
+Update a function:
 
 ```bash
 $ env GOOS=linux GOARCH=amd64 go build -o uploadimg ./uploadfunc
@@ -130,7 +146,7 @@ $ aws apigateway test-invoke-method \
   --region eu-west-1
 ```
 
-Deploy:
+Deploy the HTTP API:
 
 ```bash
 $ aws apigateway create-deployment \
@@ -138,7 +154,7 @@ $ aws apigateway create-deployment \
  --stage-name dev
 ```
 
-Call:
+Call the HTTP API:
 
 ```bash
 $ curl https://$REST_API_ID.execute-api.eu-west-1.amazonaws.com/dev/upload
