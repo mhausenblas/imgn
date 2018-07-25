@@ -84,7 +84,7 @@ $ aws lambda create-function \
   --role arn:aws:iam::$AWS_ACCOUNT_ID:role/imgn-lambda \
   --handler uploadimg \
   --region eu-west-1
- ```
+```
 
 Update a function (assuming above build has been done as well as that you've created the function):
 
@@ -103,7 +103,7 @@ $ aws lambda invoke --function-name UploadImg --region eu-west-1 uploadimg.json
 
 ### HTTP API integration
 
-Set up triggers for Lambda function via a HTTP API in the API Gateway.
+Set up triggers for Lambda functions via a HTTP API in the API Gateway.
 
 Create the trigger for `/upload` like so (note that you must have `REST_API_ID` and `ROOT_PATH_ID` from the preparation above):
 
