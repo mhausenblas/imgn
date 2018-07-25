@@ -1,6 +1,6 @@
-# imgn!
+# imgn
 
-Welcome to `imgn!` (as in: imagine), an educational app that demonstrates the journey from monolith to containerized microservices to serverless/Function-as-a-Service. The app itself is really simple:
+Welcome to `imgn` (as in: imagine), an educational app that demonstrates the journey from monolith to containerized microservices to serverless/Function-as-a-Service. The app itself is really simple:
 
 ![imgn in action](img/imgn.gif)
 
