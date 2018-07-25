@@ -10,7 +10,7 @@ First, create a namespace for the `imgn`. This is the place all `imgn` component
 $ kubectl create ns imgn
 ```
 
-Since I'm using OpenShift rather than creating a namespace, I'm creating a project (think of it as a namespace on steroids) via the `oc new-project imgn` command.
+Since I'm using OpenShift, rather than creating a namespace using above command, I'm creating a project (think of it as a namespace on steroids) via the `oc new-project imgn` command.
 
 Next, clone this repository here using the following command; this makes all manifest files we're using for the deployment available:
 
