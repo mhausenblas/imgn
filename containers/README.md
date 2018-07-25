@@ -10,7 +10,9 @@ First, create a namespace for the `imgn`. This is the place all `imgn` component
 $ kubectl create ns imgn
 ```
 
-Now, clone this repository here like so:
+Since I'm using OpenShift rather than creating a namespace, I'm creating a project (think of it as a namespace on steroids) via the `oc new-project imgn` command.
+
+Next, clone this repository here using the following command; this makes all manifest files we're using for the deployment available:
 
 ```bash
 $ git clone https://github.com/mhausenblas/imgn.git
@@ -29,7 +31,7 @@ $ kubectl -n=imgn apply -f app.yaml
 Wait for a few minutes, giving Kubernetes time to pull the container images and when you see something like the following (all pods should have the status `Running`) you know everything is fine:
 
 ```bash
-$ master $ kubectl -n=imgn get pod,svc,deploy
+$ kubectl -n=imgn get pod,svc,deploy
 NAME                        READY     STATUS    RESTARTS   AGE
 frontend-6b7b596bd4-2qkns   1/1       Running   0          5m
 imgproc-bcb7dcc5f-7xwkc     1/1       Running   0          5m
