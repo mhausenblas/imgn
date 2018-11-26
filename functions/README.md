@@ -39,3 +39,5 @@ Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.co
 
 How to build and deploy the Lambda functions and a HTTP API with [SAM](https://github.com/awslabs/serverless-application-model). If you're interested in how to set up and deploy a function and the API Gateway manually, using the `aws` CLI, check out the [notes](low-level/) here.
 
+Note that to get started I did `sam init --name app --runtime go1.x` and in order to do local development I'd do a `sam local start-api`. Also, in order to work, you need to have Docker running, locally.
+
