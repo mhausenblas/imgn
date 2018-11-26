@@ -11,26 +11,27 @@ Create S3 buckets, one for the UI (`imgn-static`), one for the Lambda functions 
 ```bash
 # setting up the UI bucket:
 $ aws s3api create-bucket \
-  --bucket imgn-static \
-  --create-bucket-configuration LocationConstraint=eu-west-1 \
-  --region eu-west-1
+      --bucket imgn-static \
+      --create-bucket-configuration LocationConstraint=eu-west-1 \
+      --region eu-west-1
 $ aws s3api put-bucket-policy \
-  --bucket imgn-static \
-  --policy file://s3-ui-bucket-policy.json \
-  --region eu-west-1
-$ aws s3 website s3://imgn-static/ --index-document index.html
+      --bucket imgn-static \
+      --policy file://s3-ui-bucket-policy.json \
+      --region eu-west-1
+$ aws s3 website s3://imgn-static/ \
+      --index-document index.html
 
 # setting up the app bucket holding the Lambda functions:
 $ aws s3api create-bucket \
-  --bucket imgn-gallery \
-  --create-bucket-configuration LocationConstraint=eu-west-1 \
-  --region eu-west-1
+      --bucket imgn-gallery \
+      --create-bucket-configuration LocationConstraint=eu-west-1 \
+      --region eu-west-1
 
 # setting up the content bucket for the images to be uploaded:
 $ aws s3api create-bucket \
-  --bucket imgn-app \
-  --create-bucket-configuration LocationConstraint=eu-west-1 \
-  --region eu-west-1
+      --bucket imgn-app \
+      --create-bucket-configuration LocationConstraint=eu-west-1 \
+      --region eu-west-1
 ```
 
 ## UI
