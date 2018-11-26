@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: The imgn serverless app
+Globals:
+  Function:
+    Timeout: 30
+Resources:
+  UploadImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: uploadimg/
+      Handler: uploadimg
+      Runtime: go1.x
+      Tracing: PassThrough
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /upload
+            Method: POST
+
+Outputs:
+  HelloWorldAPI:
+    Description: "UploadImageFunction API Gateway endpoint URL for Prod env"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
+  HelloWorldFunction:
+    Description: "UploadImageFunction ARN"
+    Value: !GetAtt UploadImageFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for UploadImageFunction"
+    Value: !GetAtt UploadImageFunction.Arn
