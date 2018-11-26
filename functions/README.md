@@ -38,7 +38,9 @@ $ aws s3api create-bucket \
 Deploy and update the UI as a static HTML site:
 
 ```bash
-$ aws s3 sync ui/ s3://imgn-static --exclude ".DS_Store" --region eu-west-1
+$ aws s3 sync ui/ s3://imgn-static \
+      --exclude ".DS_Store"
+      --region eu-west-1
 ```
 
 Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.com/
