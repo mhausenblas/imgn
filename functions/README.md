@@ -6,9 +6,10 @@ Make sure you've got the `aws` CLI and the [SAM CLI](https://github.com/awslabs/
 
 ## Preparation
 
-Create S3 buckets, one for the UI (`imgn-static`) and one for storing the uploaded images (`imgn-gallery`):
+Create S3 buckets, one for the UI (`imgn-static`), one for the Lambda functions (`imgn-app`), and one for storing the uploaded images (`imgn-gallery`):
 
 ```bash
+# setting up the UI bucket:
 $ aws s3api create-bucket \
   --bucket imgn-static \
   --create-bucket-configuration LocationConstraint=eu-west-1 \
@@ -19,8 +20,15 @@ $ aws s3api put-bucket-policy \
   --region eu-west-1
 $ aws s3 website s3://imgn-static/ --index-document index.html
 
+# setting up the app bucket holding the Lambda functions:
 $ aws s3api create-bucket \
   --bucket imgn-gallery \
+  --create-bucket-configuration LocationConstraint=eu-west-1 \
+  --region eu-west-1
+
+# setting up the content bucket for the images to be uploaded:
+$ aws s3api create-bucket \
+  --bucket imgn-app \
   --create-bucket-configuration LocationConstraint=eu-west-1 \
   --region eu-west-1
 ```
