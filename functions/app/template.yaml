@@ -18,7 +18,6 @@ Resources:
           Properties:
             Path: /upload
             Method: POST
-
 Outputs:
   HelloWorldAPI:
     Description: "UploadImageFunction API Gateway endpoint URL for Prod env"

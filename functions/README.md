@@ -39,21 +39,33 @@ Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.co
 
 How to build and deploy the Lambda functions and a HTTP API with [SAM](https://github.com/awslabs/serverless-application-model). If you're interested in how to set up and deploy a function and the API Gateway manually, using the `aws` CLI, check out the [notes](low-level/) here.
 
-Note that to get started I did `sam init --name app --runtime go1.x`. Also, in order to work, you need to have Docker running, locally.
+### Local development
 
-In each iteration, do:
+To get started I did `sam init --name app --runtime go1.x` initially and developed each of the functions independently. Note that in order to work, you need to have Docker running, locally.
+
+For each code iteration, in `app/` do:
 
 ```bash
-$ cd app/
-
-# update Go source code
-
-$ make deps
-
+# 1. run emulation of Lambda and API Gateway locally (via Docker):
 $ sam local start-api
+
+# 2. update Go source code (add functionality, fix bugs)
+
+# 3. create a new binary which is automagically synced into SAM runtime:
+$ make build
 ```
 
-Deploy:
+Note that if you change anything in the SAM/CF [template file](app/template.yaml) then you need to re-start the local API emulation.
+
+Testing a function (here: [upload image](app/uploadimg)) locally by calling the HTTP API endpoint:
+
+```bash
+$ curl -XPOST --header "Content-Type: image/jpeg" \
+       --data-binary @test.jpg \
+       http://127.0.0.1:3000/upload
+```
+
+### Deployment to live environment
 
 ```bash
 $ sam package \ 

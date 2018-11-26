@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,13 +13,13 @@ import (
 
 var errorLogger = log.New(os.Stderr, "ERROR ", log.Llongfile)
 
-type uploadres struct {
+type UploadResponse struct {
 	Status string `json:"status"`
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	ur := &uploadres{
-		Status: "all good",
+	ur := &UploadResponse{
+		Status: "got file",
 	}
 	js, err := json.Marshal(ur)
 	if err != nil {
@@ -40,14 +41,7 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusInternalServerError,
-		Body:       http.StatusText(http.StatusInternalServerError),
-	}, nil
-}
-
-func clientError(status int) (events.APIGatewayProxyResponse, error) {
-	return events.APIGatewayProxyResponse{
-		StatusCode: status,
-		Body:       http.StatusText(status),
+		Body:       fmt.Sprintf("%v", err.Error()),
 	}, nil
 }
 
