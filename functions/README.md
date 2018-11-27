@@ -26,6 +26,12 @@ $ aws s3api create-bucket \
       --bucket imgn-gallery \
       --create-bucket-configuration LocationConstraint=eu-west-1 \
       --region eu-west-1
+$ aws s3api put-bucket-policy \
+      --bucket imgn-gallery \
+      --policy file://s3-gallery-bucket-policy.json \
+      --region eu-west-1
+$ aws s3 website s3://imgn-gallery/ \
+      --index-document index.html
 
 # setting up the content bucket for the images to be uploaded:
 $ aws s3api create-bucket \

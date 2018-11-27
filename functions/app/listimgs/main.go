@@ -30,15 +30,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Meta   string `json:"meta"`
 	}
 	flist := []Entry{}
-
 	for _, item := range resp.Contents {
-		fmt.Println("Name:         ", *item.Key)
-		fmt.Println("Last modified:", *item.LastModified)
-		fmt.Println("Size:         ", *item.Size)
-		fmt.Println("Storage class:", *item.StorageClass)
-		fmt.Println("")
 		flist = append(flist, Entry{
-			Source: "/" + *item.Key,
+			Source: "http://imgn-gallery.s3-website-eu-west-1.amazonaws.com/" + *item.Key,
 			Meta:   "meta",
 		})
 	}
