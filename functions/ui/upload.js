@@ -3,7 +3,8 @@
     var inputFile = d.querySelector("#inputFile");
     var divNotification = d.querySelector("#alert");
 
-    inputFile.addEventListener("change", addFile);    
+    inputFile.addEventListener("change", addFile);
+
     function addFile(e) {
         var file = e.target.files[0]
         if (!file) {
@@ -15,7 +16,7 @@
     function upload(file) {
         var formData = new FormData()
         formData.append("file", file)
-        post("/upload", formData)
+        post("UPLOAD_HTTP", formData)
             .then(onResponse)
             .catch(onResponse);
     }

@@ -4,11 +4,10 @@ Description: The imgn serverless app
 Globals:
   Function:
     Timeout: 30
-Resources:
   Api:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: prod
+    Cors:
+      AllowOrigin: "'imgn-static.s3-website-eu-west-1.amazonaws.com'"
+Resources:
   UploadImageFunction:
     Type: AWS::Serverless::Function
     Properties:

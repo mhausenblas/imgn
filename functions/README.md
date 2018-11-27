@@ -34,18 +34,6 @@ $ aws s3api create-bucket \
       --region eu-west-1
 ```
 
-## UI
-
-Deploy and update the UI as a static HTML site:
-
-```bash
-$ aws s3 sync ui/ s3://imgn-static \
-      --exclude ".DS_Store" \
-      --region eu-west-1
-```
-
-Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.com/
-
 ## Lambda functions and HTTP API
 
 How to build and deploy the Lambda functions and a HTTP API with [SAM](https://github.com/awslabs/serverless-application-model). If you're interested in how to set up and deploy a function and the API Gateway manually, using the `aws` CLI, check out the [notes](low-level/) here.
@@ -93,3 +81,23 @@ $ aws cloudformation describe-stacks \
       --stack-name imgnstack | \
       jq '.Stacks[].Outputs[] | select(.OutputKey=="UploadImageAPIEndpoint").OutputValue' -r
 ```
+
+### Clean up
+
+```bash
+$ aws cloudformation delete-stack \
+      --stack-name imgnstack
+```
+
+## UI
+
+Once the CF stack is deployed and the HTTP endpoints are known, we can deploy the UI like so:
+
+```bash
+./deploy-ui.sh
+```
+
+Now the UI is available via http://imgn-static.s3-website-eu-west-1.amazonaws.com/.
+
+Note that above will query the CF stack, replace the respective HTTP endpoints for the
+`/upload` and `/gallery` JS calls, and sync the result to the `imgn-static` S3 bucket.
