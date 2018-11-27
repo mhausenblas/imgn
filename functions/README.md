@@ -40,7 +40,7 @@ Deploy and update the UI as a static HTML site:
 
 ```bash
 $ aws s3 sync ui/ s3://imgn-static \
-      --exclude ".DS_Store"
+      --exclude ".DS_Store" \
       --region eu-west-1
 ```
 
@@ -79,12 +79,14 @@ $ curl -XPOST --header "Content-Type: image/jpeg" \
 ### Deployment to live environment
 
 ```bash
-$ sam package \ 
+$ sam package \
       --template-file template.yaml --output-template-file imgn-stack.yaml \
       --s3-bucket imgn-app
 
-$ sam deploy
+$ sam deploy \
       --template-file imgn-stack.yaml \
       --stack-name imgnstack \
       --capabilities CAPABILITY_IAM
+
+$ aws cloudformation describe-stacks --stack-name imgnstack
 ```

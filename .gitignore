@@ -16,3 +16,4 @@ gallery/
 /containers/imgproc/imgproc
 /containers/frontend/frontend
 /functions/app/uploadimg/uploadimg
+/functions/app/imgn-stack.yaml

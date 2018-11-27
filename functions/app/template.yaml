@@ -19,12 +19,12 @@ Resources:
             Path: /upload
             Method: POST
 Outputs:
-  HelloWorldAPI:
+  UploadImageAPI:
     Description: "UploadImageFunction API Gateway endpoint URL for Prod env"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
-  HelloWorldFunction:
+  UploadImageFunctionARN:
     Description: "UploadImageFunction ARN"
     Value: !GetAtt UploadImageFunction.Arn
-  HelloWorldFunctionIamRole:
+  UploadImageFunctionIamRole:
     Description: "Implicit IAM Role created for UploadImageFunction"
     Value: !GetAtt UploadImageFunction.Arn
