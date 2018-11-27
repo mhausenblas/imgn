@@ -5,6 +5,10 @@ Globals:
   Function:
     Timeout: 30
 Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
   UploadImageFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -19,9 +23,9 @@ Resources:
             Path: /upload
             Method: POST
 Outputs:
-  UploadImageAPI:
+  UploadImageAPIEndpoint:
     Description: "UploadImageFunction API Gateway endpoint URL for Prod env"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/upload/"
   UploadImageFunctionARN:
     Description: "UploadImageFunction ARN"
     Value: !GetAtt UploadImageFunction.Arn

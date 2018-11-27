@@ -88,5 +88,8 @@ $ sam deploy \
       --stack-name imgnstack \
       --capabilities CAPABILITY_IAM
 
-$ aws cloudformation describe-stacks --stack-name imgnstack
+# list the HTTP API endpoint of the upload image function:
+$ aws cloudformation describe-stacks \
+      --stack-name imgnstack | \
+      jq '.Stacks[].Outputs[] | select(.OutputKey=="UploadImageAPIEndpoint").OutputValue' -r
 ```
