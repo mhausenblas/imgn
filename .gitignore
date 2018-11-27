@@ -17,3 +17,4 @@ gallery/
 /containers/frontend/frontend
 /functions/app/uploadimg/uploadimg
 /functions/app/imgn-stack.yaml
+/functions/app/listimgs/listimgs
