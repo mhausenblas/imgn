@@ -29,7 +29,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
 			"Content-Type":                "application/json",
-			"Access-Control-Allow-Origin": "'imgn-static.s3-website-eu-west-1.amazonaws.com'",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: string(js),
 	}, nil
