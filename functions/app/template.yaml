@@ -23,13 +23,20 @@ Resources:
           Properties:
             Path: /upload
             Method: POST
+  ListImagesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: listimgs/
+      Handler: listimgs
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /gallery
+            Method: GET
 Outputs:
-  UploadImageAPIEndpoint:
+  ImgnAPIEndpoint:
     Description: "UploadImageFunction API Gateway endpoint URL for Prod env"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
-  UploadImageFunctionARN:
-    Description: "UploadImageFunction ARN"
-    Value: !GetAtt UploadImageFunction.Arn
-  UploadImageFunctionIamRole:
-    Description: "Implicit IAM Role created for UploadImageFunction"
-    Value: !GetAtt UploadImageFunction.Arn
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"

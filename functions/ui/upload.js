@@ -16,7 +16,7 @@
     function upload(file) {
         var formData = new FormData()
         formData.append("file", file)
-        post("UPLOAD_HTTP", formData)
+        post("HTTP_API/upload", formData)
             .then(onResponse)
             .catch(onResponse);
     }
