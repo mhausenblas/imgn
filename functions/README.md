@@ -67,15 +67,20 @@ $ curl -XPOST --header "Content-Type: image/jpeg" \
 ### Deployment to live environment
 
 ```bash
+# package all artefacts:
 $ sam package \
       --template-file template.yaml --output-template-file imgn-stack.yaml \
       --s3-bucket imgn-app
-
+# deploy CF stack:
 $ sam deploy \
       --template-file imgn-stack.yaml \
       --stack-name imgnstack \
       --capabilities CAPABILITY_IAM
+```
 
+Note: above two steps are also available via `make deploy`.
+
+```bash
 # get the HTTP API endpoint of the upload image function:
 $ aws cloudformation describe-stacks \
       --stack-name imgnstack | \
