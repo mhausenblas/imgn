@@ -24,7 +24,7 @@ Resources:
 Outputs:
   UploadImageAPIEndpoint:
     Description: "UploadImageFunction API Gateway endpoint URL for Prod env"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/upload/"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/upload/"
   UploadImageFunctionARN:
     Description: "UploadImageFunction ARN"
     Value: !GetAtt UploadImageFunction.Arn

@@ -76,10 +76,16 @@ $ sam deploy \
       --stack-name imgnstack \
       --capabilities CAPABILITY_IAM
 
-# list the HTTP API endpoint of the upload image function:
+# get the HTTP API endpoint of the upload image function:
 $ aws cloudformation describe-stacks \
       --stack-name imgnstack | \
       jq '.Stacks[].Outputs[] | select(.OutputKey=="UploadImageAPIEndpoint").OutputValue' -r
+
+# invoke upload image function via HTTP API endpoint from previous step:
+curl -XPOST \
+     --header "Content-Type: image/jpeg" --header "origin: imgn-static.s3-website-eu-west-1.amazonaws.com" \
+     --data-binary @test.jpg \
+     https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/Prod/upload/
 ```
 
 ### Clean up
