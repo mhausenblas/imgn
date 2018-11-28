@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"mime"
 	"mime/multipart"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -28,7 +28,7 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string, imgfile multipart.File, err error) {
 	referrer := request.Headers["Referer"]
 	// create a stdlib HTTP request so that we can use the FormFile methods:
-	r, err := http.NewRequest(http.MethodPost, referrer, strings.NewReader(request.Body))
+	r, err := http.NewRequest(request.HTTPMethod, referrer, strings.NewReader(request.Body))
 	if err != nil {
 		return "", "", nil, err
 	}
@@ -38,17 +38,14 @@ func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string
 	// content-type:multipart/form-data; boundary=----WebKitFormBoundaryHW2069S2hMazyq4B
 	mpct := request.Headers["content-type"]
 	r.Header.Set("Content-Type", mpct)
+	r.Header.Set("Content-Length", strconv.Itoa(len(request.Body)))
 	fmt.Printf("DEBUG:: content type: %v\n", mpct)
-	mediaType, params, err := mime.ParseMediaType(mpct)
-	if err != nil {
-		return "", "", nil, err
-	}
-	fmt.Printf("DEBUG:: media type: %v params: %v\n", mediaType, params)
 	// now let's parse the multipart form data (the key/name used in upload.html is 'file'):
 	mpfile, mpheader, err := r.FormFile("file")
 	if err != nil {
 		return "", "", nil, err
 	}
+	defer mpfile.Close()
 	// the name of the image user selected for upload:
 	imgname = mpheader.Filename
 	fmt.Printf("DEBUG:: filename: %v\n", imgname)
@@ -70,7 +67,7 @@ func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Printf("DEBUG:: proxyrequest %v\n", request)
+	fmt.Printf("DEBUG:: IsBase64Encoded: %v\n", request.IsBase64Encoded)
 	gallerybucket := "imgn-gallery"
 	// parse the image file name and the data from multipart formdata request:
 	imgname, imgct, imgfile, err := parseFormData(request)
@@ -84,8 +81,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return serverError(err)
 	}
-	uploader := s3manager.NewUploader(s)
-	_, err = uploader.Upload(&s3manager.UploadInput{
+	uploader := s3manager.NewUploader(s, func(u *s3manager.Uploader) {
+		u.PartSize = 64 * 1024 * 1024
+		u.LeavePartsOnError = true
+	})
+	uo, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(gallerybucket),
 		Key:         aws.String(imgname),
 		ContentType: aws.String(imgct),
@@ -95,6 +95,7 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return serverError(err)
 	}
+	fmt.Printf("DEBUG:: upload result: %v\n", uo)
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
