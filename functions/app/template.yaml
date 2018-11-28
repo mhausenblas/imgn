@@ -9,6 +9,9 @@ Globals:
       AllowMethods: "'*'"
       AllowHeaders: "'*'"
       AllowOrigin: "'*'"
+    BinaryMediaTypes:
+      - image~1jpeg
+      - image~1png
 Resources:
   UploadImageFunction:
     Type: AWS::Serverless::Function

@@ -25,7 +25,7 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 	}, nil
 }
 
-func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string, imgdata multipart.File, err error) {
+func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string, imgfile multipart.File, err error) {
 	referrer := request.Headers["Referer"]
 	// create a stdlib HTTP request so that we can use the FormFile methods:
 	r, err := http.NewRequest(http.MethodPost, referrer, strings.NewReader(request.Body))
@@ -49,29 +49,31 @@ func parseFormData(request events.APIGatewayProxyRequest) (imgname, imgct string
 	if err != nil {
 		return "", "", nil, err
 	}
-	defer mpfile.Close()
 	// the name of the image user selected for upload:
 	imgname = mpheader.Filename
 	fmt.Printf("DEBUG:: filename: %v\n", imgname)
 	// the image data itself:
-	imgdata = mpfile
+	imgfile = mpfile
 	// the content type of the image (yeah, not a good practice, but ...)
 	switch {
 	case strings.HasSuffix(imgname, "jpg"), strings.HasSuffix(imgname, "jpeg"):
 		imgct = "image/jpeg"
 	case strings.HasSuffix(imgname, "png"):
 		imgct = "image/png"
+	case strings.HasSuffix(imgname, "txt"):
+		imgct = "text/plain"
 	default:
 		imgct = ""
 	}
 	fmt.Printf("DEBUG:: content type: %v\n", imgct)
-	return imgname, imgct, imgdata, nil
+	return imgname, imgct, imgfile, nil
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	fmt.Printf("DEBUG:: proxyrequest %v\n", request)
 	gallerybucket := "imgn-gallery"
 	// parse the image file name and the data from multipart formdata request:
-	imgname, imgct, imgdata, err := parseFormData(request)
+	imgname, imgct, imgfile, err := parseFormData(request)
 	if err != nil {
 		return serverError(err)
 	}
@@ -79,12 +81,16 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	s, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-1")},
 	)
+	if err != nil {
+		return serverError(err)
+	}
 	uploader := s3manager.NewUploader(s)
 	_, err = uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(gallerybucket),
 		Key:         aws.String(imgname),
-		ContentType: &imgct,
-		Body:        imgdata,
+		ContentType: aws.String(imgct),
+		// ContentEncoding: aws.String("base64"),
+		Body: imgfile,
 	})
 	if err != nil {
 		return serverError(err)
