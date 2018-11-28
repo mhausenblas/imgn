@@ -60,15 +60,9 @@ $ sam local start-api
 $ make build
 ```
 
-Note that if you change anything in the SAM/CF [template file](app/template.yaml) then you need to re-start the local API emulation.
+If you change anything in the SAM/CF [template file](app/template.yaml) then you need to re-start the local API emulation.
 
-Testing a function (here: [upload image](app/uploadimg)) locally by calling the HTTP API endpoint:
-
-```bash
-$ curl -XPOST --header "Content-Type: image/jpeg" \
-       --data-binary @test.jpg \
-       http://127.0.0.1:3000/upload
-```
+Note: Local testing the API is at time of writing not possible since [CORS is locally not supported](https://github.com/awslabs/aws-sam-cli/issues/323), yet.
 
 ### Deployment to live environment
 
@@ -87,15 +81,14 @@ $ sam deploy \
 Note: above two steps are also available via `make deploy`.
 
 ```bash
-# get the HTTP API endpoint of the upload image function:
+# get the HTTP API endpoint:
 $ aws cloudformation describe-stacks \
       --stack-name imgnstack | \
-      jq '.Stacks[].Outputs[] | select(.OutputKey=="UploadImageAPIEndpoint").OutputValue' -r
+      jq '.Stacks[].Outputs[] | select(.OutputKey=="ImgnAPIEndpoint").OutputValue' -r
 
 # invoke upload image function via HTTP API endpoint from previous step:
 curl -XPOST \
-     --header "Content-Type: image/jpeg" --header "origin: imgn-static.s3-website-eu-west-1.amazonaws.com" \
-     --data-binary @test.jpg \
+     --form "file=@some.jpg" 
      https://XXXXXXXXXX.execute-api.eu-west-1.amazonaws.com/Prod/upload/
 ```
 
