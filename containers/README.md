@@ -1,5 +1,10 @@
 # imgn containerized
 
+The overall architecture of `imgn` as a containerized microsercices app looks as follows:
+
+![containers architecture](imgn-arch-containers.png)
+
+
 ## Preparation
 
 Make sure you have Kubernetes in version 1.8 or above available (check with `kubectl version --short`). You can, for example, use the [Katacoda playground](https://katacoda.com/courses/kubernetes/playground) for this. I'll be using [OpenShift Online](https://manage.openshift.com/) in the following.
