@@ -1,8 +1,10 @@
 # imgn serverless
 
-Clone this repo and work in the `functions/` subdirectory.
+The overall architecture of `imgn` serverless looks as follows:
 
-Make sure you've got the `aws` CLI and the [SAM CLI](https://github.com/awslabs/aws-sam-cli) installed.
+![serverless architecture](imgn-arch-functions.png)
+
+In order to build the app, clone this repo and work in the `functions/` subdirectory. Also, make sure you've got the `aws` CLI and the [SAM CLI](https://github.com/awslabs/aws-sam-cli) installed.
 
 ## Preparation
 
