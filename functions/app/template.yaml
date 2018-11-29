@@ -58,7 +58,7 @@ Resources:
         Timer:
           Type: Schedule
           Properties:
-            Schedule: cron(1 * * * *)
+            Schedule: rate(1 minute)
       Policies:
         - AWSLambdaExecute
         - Version: '2012-10-17'
