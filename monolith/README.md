@@ -1,5 +1,9 @@
 # imgn as a monolith
 
+The overall architecture of `imgn` as a monolith looks as follows:
+
+![monolith architecture](imgn-arch-monolith.png)
+
 To run `imgn` as a monolith, in the simplest case, do the following (in the `monolith` directory, assuming you have Go 1.10 or above installed):
 
 ```bash
