@@ -56,7 +56,7 @@ $ sam local start-api
 
 # 2. update Go source code (add functionality, fix bugs)
 
-# 3. create a new binary which is automagically synced into SAM runtime:
+# 3. create new binaries which are also automagically synced into the local SAM runtime:
 $ make build
 ```
 
