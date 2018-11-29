@@ -1,7 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"image"
+	_ "image/jpeg"
+	_ "image/png"
+	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -39,21 +45,36 @@ func upload(bucket, fname, content string) error {
 	return err
 }
 
-func extractMetadata(imgfile string) (metadata string, err error) {
+func extractMetadata(bucket, imgfile string) (metadata string, err error) {
 	// download image file:
-	//TBD
+	s, err := session.NewSession(&aws.Config{
+		Region: aws.String("eu-west-1")},
+	)
+	if err != nil {
+		return "", err
+	}
+	tmpf, err := ioutil.TempFile(os.TempDir(), "")
+	if err != nil {
+		return "", err
+	}
+	downloader := s3manager.NewDownloader(s)
+	_, err = downloader.Download(tmpf,
+		&s3.GetObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(imgfile),
+		})
 	// decode image and extract dimensions (== metadata):
-	// image, _, err := image.DecodeConfig(content)
-	// if err != nil {
-	// 	return err
-	// }
-	// metadata := fmt.Sprintf("%dx%d", image.Width, image.Height)
-	metadata = "100x100"
+	image, _, err := image.DecodeConfig(tmpf)
+	if err != nil {
+		return "", err
+	}
+	metadata = fmt.Sprintf("%dx%d", image.Width, image.Height)
 	log.Printf("DEBUG:: extracted metadata: %v from %v\n", metadata, imgfile)
 	return metadata, nil
 }
 
 func handler() error {
+	gbucket := "imgn-gallery"
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-1")},
 	)
@@ -78,11 +99,11 @@ func handler() error {
 		metafile := file + ".meta"
 		switch {
 		case has(bucketcontent, file) && !has(bucketcontent, metafile):
-			metadata, err := extractMetadata(file)
+			metadata, err := extractMetadata(gbucket, file)
 			if err != nil {
 				log.Printf("ERROR:: %v\n", err)
 			}
-			err = upload("imgn-gallery", metafile, metadata)
+			err = upload(gbucket, metafile, metadata)
 			if err != nil {
 				log.Printf("ERROR:: %v\n", err)
 			}
