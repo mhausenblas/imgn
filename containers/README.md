@@ -1,6 +1,6 @@
 # imgn containerized
 
-The overall architecture of `imgn` as a containerized microsercices app looks as follows:
+The overall architecture of `imgn` as a containerized microservices app looks as follows:
 
 ![containers architecture](imgn-arch-containers.png)
 
