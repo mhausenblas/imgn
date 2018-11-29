@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
@@ -19,7 +19,7 @@ func handler() error {
 		return err
 	}
 	for _, item := range resp.Contents {
-		fmt.Printf("DEBUG:: item: %v\n", item)
+		log.Printf("DEBUG:: item: %v\n", item)
 	}
 	return nil
 }

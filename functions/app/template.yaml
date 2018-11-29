@@ -27,7 +27,7 @@ Resources:
             Path: /upload
             Method: POST
       Policies:
-        - AWSLambdaExecute # Managed Policy
+        - AWSLambdaExecute
         - Version: '2012-10-17'
           Statement:
             - Effect: Allow
@@ -47,7 +47,28 @@ Resources:
           Properties:
             Path: /gallery
             Method: GET
+  ExtractMetaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: extractmeta/
+      Handler: extractmeta
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: cron(1 * * * *)
+      Policies:
+        - AWSLambdaExecute
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+              - s3:PutObject
+              Resource: 'arn:aws:s3:::imgn-gallery/*'
 Outputs:
   ImgnAPIEndpoint:
     Description: "Imgn HTTP API Gateway endpoint URL for Prod env"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+

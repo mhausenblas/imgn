@@ -20,3 +20,4 @@ gallery/
 /functions/app/listimgs/listimgs
 /functions/test
 /functions/app/uploadimgplain
+/functions/app/extractmeta/extractmeta
