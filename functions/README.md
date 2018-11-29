@@ -46,7 +46,7 @@ How to build and deploy the Lambda functions and a HTTP API with [SAM](https://g
 
 ### Local development
 
-To get started I did `sam init --name app --runtime go1.x` initially and developed each of the functions independently. Note that in order to work, you need to have Docker running, locally.
+To get started I did `sam init --name app --runtime go1.x` initially and developed each of the functions independently. In order for the local simulation to work, you need to have Docker running. Note: Local testing the API is at time of writing not possible since [CORS is locally not supported](https://github.com/awslabs/aws-sam-cli/issues/323), yet.
 
 For each code iteration, in `app/` do:
 
@@ -62,9 +62,11 @@ $ make build
 
 If you change anything in the SAM/CF [template file](app/template.yaml) then you need to re-start the local API emulation.
 
-Note: Local testing the API is at time of writing not possible since [CORS is locally not supported](https://github.com/awslabs/aws-sam-cli/issues/323), yet.
+### Development and deployment in live environment
 
-### Deployment to live environment
+The following assumes that the S3 buckets as outlined above are set up and you have access to AWS.
+
+For each code iteration, in `app/` do:
 
 ```bash
 # package all artefacts:
