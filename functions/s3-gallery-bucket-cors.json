@@ -1,0 +1,8 @@
+{
+    "CORSRules": [{
+        "AllowedOrigins": ["*"],
+        "AllowedHeaders": ["Authorization"],
+        "AllowedMethods": ["GET", "PUT"],
+        "MaxAgeSeconds": 3000
+    }]
+}

@@ -23,7 +23,7 @@ $ aws s3api put-bucket-policy \
 $ aws s3 website s3://imgn-static/ \
       --index-document index.html
 
-# setting up the app bucket holding the Lambda functions:
+# setting up the content bucket for the images to be uploaded:
 $ aws s3api create-bucket \
       --bucket imgn-gallery \
       --create-bucket-configuration LocationConstraint=eu-west-1 \
@@ -34,8 +34,11 @@ $ aws s3api put-bucket-policy \
       --region eu-west-1
 $ aws s3 website s3://imgn-gallery/ \
       --index-document index.html
+$ aws s3api put-bucket-cors \
+      --bucket imgn-gallery \
+      --cors-configuration file://s3-gallery-bucket-cors.json
 
-# setting up the content bucket for the images to be uploaded:
+# setting up the app bucket holding the Lambda functions:
 $ aws s3api create-bucket \
       --bucket imgn-app \
       --create-bucket-configuration LocationConstraint=eu-west-1 \
