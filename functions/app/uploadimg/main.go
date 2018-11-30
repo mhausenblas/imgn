@@ -8,12 +8,13 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 func serverError(err error) (events.APIGatewayProxyResponse, error) {
@@ -63,42 +64,74 @@ func parseForm(key, mpheader string, body io.Reader) (string, string, io.Reader,
 	return filename, contentType, strings.NewReader(string(buf)), nil
 }
 
+// func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+// 	fmt.Printf("DEBUG:: IsBase64Encoded: %v\n", request.IsBase64Encoded)
+// 	gallerybucket := "imgn-gallery"
+// 	// parse the image file name and the data from multipart formdata request:
+// 	imgname, imgct, imgfile, err := parseForm("file", request.Headers["content-type"], strings.NewReader(request.Body))
+// 	if err != nil {
+// 		return serverError(err)
+// 	}
+// 	// upload image file into S3 bucket:
+// 	s, err := session.NewSession(&aws.Config{
+// 		Region: aws.String("eu-west-1")},
+// 	)
+// 	if err != nil {
+// 		return serverError(err)
+// 	}
+// 	uploader := s3manager.NewUploader(s, func(u *s3manager.Uploader) {
+// 		u.PartSize = 64 * 1024 * 1024
+// 		u.LeavePartsOnError = true
+// 	})
+// 	uo, err := uploader.Upload(&s3manager.UploadInput{
+// 		Bucket:      aws.String(gallerybucket),
+// 		Key:         aws.String(imgname),
+// 		ContentType: aws.String(imgct),
+// 		Body:        imgfile,
+// 	})
+// 	if err != nil {
+// 		return serverError(err)
+// 	}
+// 	fmt.Printf("DEBUG:: upload result: %v\n", uo)
+// 	return events.APIGatewayProxyResponse{
+// 		StatusCode: http.StatusOK,
+// 		Headers: map[string]string{
+// 			"Content-Type":                "application/json",
+// 			"Access-Control-Allow-Origin": "*",
+// 		},
+// 		Body: fmt.Sprintf("Successfully uploaded %v into S3 bucket %v", imgname, gallerybucket),
+// 	}, nil
+// }
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Printf("DEBUG:: IsBase64Encoded: %v\n", request.IsBase64Encoded)
 	gallerybucket := "imgn-gallery"
 	// parse the image file name and the data from multipart formdata request:
-	imgname, imgct, imgfile, err := parseForm("file", request.Headers["content-type"], strings.NewReader(request.Body))
+	imgname, _, _, err := parseForm("file", request.Headers["content-type"], strings.NewReader(request.Body))
 	if err != nil {
 		return serverError(err)
 	}
-	// upload image file into S3 bucket:
 	s, err := session.NewSession(&aws.Config{
 		Region: aws.String("eu-west-1")},
 	)
+	s3c := s3.New(s)
+	req, _ := s3c.PutObjectRequest(&s3.PutObjectInput{
+		Bucket: aws.String(gallerybucket),
+		Key:    aws.String(imgname),
+	})
+	presurl, err := req.Presign(5 * time.Minute)
 	if err != nil {
 		return serverError(err)
 	}
-	uploader := s3manager.NewUploader(s, func(u *s3manager.Uploader) {
-		u.PartSize = 64 * 1024 * 1024
-		u.LeavePartsOnError = true
-	})
-	uo, err := uploader.Upload(&s3manager.UploadInput{
-		Bucket:      aws.String(gallerybucket),
-		Key:         aws.String(imgname),
-		ContentType: aws.String(imgct),
-		Body:        imgfile,
-	})
-	if err != nil {
-		return serverError(err)
-	}
-	fmt.Printf("DEBUG:: upload result: %v\n", uo)
+	fmt.Printf("DEBUG:: presigned URL: %v\n", presurl)
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
 			"Content-Type":                "application/json",
 			"Access-Control-Allow-Origin": "*",
 		},
-		Body: fmt.Sprintf("Successfully uploaded %v into S3 bucket %v", imgname, gallerybucket),
+		Body: presurl,
 	}, nil
 
 }
