@@ -32,11 +32,11 @@ $ aws s3api put-bucket-policy \
       --bucket imgn-gallery \
       --policy file://s3-gallery-bucket-policy.json \
       --region eu-west-1
-$ aws s3 website s3://imgn-gallery/ \
-      --index-document index.html
 $ aws s3api put-bucket-cors \
       --bucket imgn-gallery \
       --cors-configuration file://s3-gallery-bucket-cors.json
+$ aws s3 website s3://imgn-gallery/ \
+      --index-document index.html
 
 # setting up the app bucket holding the Lambda functions:
 $ aws s3api create-bucket \
