@@ -2,6 +2,7 @@
     "use strict";
     var inputFile = d.querySelector("#inputFile");
     var divNotification = d.querySelector("#alert");
+    var fn = "";
 
     inputFile.addEventListener("change", addFile);
 
@@ -16,31 +17,26 @@
     function preupload(file) {
         var formData = new FormData()
         formData.append("file", file)
-        post("HTTP_API/upload", formData)
+        fn = file
+        axios.post("HTTP_API/upload", formData)
             .then(onPreResponse)
             .catch(onPreResponse);
     }
 
     function onPreResponse(response) {
-        var file = e.target.files[0]
-        if (!file) {
-            return
-        }
         var presurl = response.data;
-        upload(file, presurl)
+        upload(presurl)
     }
 
-    function upload(file, presurl) {
-        var formData = new FormData()
-        formData.append("file", file)
-        post(presurl, formData)
+    function upload(presurl) {
+        axios.put(presurl, fn)
             .then(onResponse)
             .catch(onResponse);
     }
 
     function onResponse(response) {
         var className = (response.status !== 400) ? "success" : "error";
-        divNotification.innerHTML = response.data;
+        divNotification.innerHTML = "Successfully uploaded " + fn.name + " to gallery!"
         divNotification.classList.add(className);
         setTimeout(function () {
             divNotification.classList.remove(className);
