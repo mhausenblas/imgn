@@ -10,13 +10,30 @@
         if (!file) {
             return
         }
-        upload(file);
+        preupload(file);
     }
 
-    function upload(file) {
+    function preupload(file) {
         var formData = new FormData()
         formData.append("file", file)
         post("HTTP_API/upload", formData)
+            .then(onPreResponse)
+            .catch(onPreResponse);
+    }
+
+    function onPreResponse(response) {
+        var file = e.target.files[0]
+        if (!file) {
+            return
+        }
+        var presurl = response.data;
+        upload(file, presurl)
+    }
+
+    function upload(file, presurl) {
+        var formData = new FormData()
+        formData.append("file", file)
+        post(presurl, formData)
             .then(onResponse)
             .catch(onResponse);
     }
