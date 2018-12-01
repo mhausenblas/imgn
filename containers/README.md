@@ -4,6 +4,13 @@ The overall architecture of `imgn` as a containerized microservices app looks as
 
 ![containers architecture](imgn-arch-containers.png)
 
+There are two deployments and a service defined in [app.yaml](app.yaml) and a Minio deployment and service (the S3 clone) in [storage.yaml](storage.yaml):
+
+- The `frontend` deployment using container image [quay.io/mhausenblas/imgn-frontend:0.3:0.3](https://quay.io/repository/mhausenblas/imgn-frontend), along with the respective `frontend` service which serves static assets (the UI) via `/` and exposes the HTTP API endpoints:
+  - `/upload` … handling `multipart/form-data` POST requests to upload an image
+  - `/gallery` … handling GET requests by querying the `imgn-gallery` bucket hosted by Minio and returning a JSON encoded list of images and metadata
+- The `imgproc`  deployment using container image [quay.io/mhausenblas/imgn-imgproc:0.3](https://quay.io/repository/mhausenblas/imgn-imgproc) which periodical checks for new images in the `imgn-gallery` bucket and if it finds a new one, it extracts metadata and writes it back into the bucket.
+- The `minio` deployment using container image [quay.io/mhausenblas/minio:1](https://quay.io/repository/mhausenblas/minio) along with the respective `minio` service, providing S3 storage and retrieval functionality. 
 
 ## Preparation
 
