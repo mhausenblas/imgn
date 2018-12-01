@@ -4,6 +4,12 @@ The overall architecture of `imgn` serverless looks as follows:
 
 ![serverless architecture](imgn-arch-functions.png)
 
+All three Lambda functions, the API Gateway integration, as well as the CloudWatch event schedule are defined in the [SAM template](app/template.yaml):
+
+- `UploadImageFunction` handles `multipart/form-data` POST requests via `/upload` and returns a [presigned URL](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/s3-example-presigned-urls.html) that is then used client-side to issue an HTTP PUT request to upload the image directly into the `imgn-gallery` S3 bucket.
+- `ListImagesFunction` handles HTTP GET requests via `/gallery` and queries the `imgn-gallery` S3 bucket returning a JSON encoded list of images and metadata.
+- `ExtractMetaFunction` periodical checks for new images in the `imgn-gallery` S3 bucket and if it finds a new one, it extracts metadata and writes it back into the bucket.
+
 In order to build the app, clone this repo and work in the `functions/` subdirectory. Also, make sure you've got the `aws` CLI and the [SAM CLI](https://github.com/awslabs/aws-sam-cli) installed.
 
 ## Preparation
